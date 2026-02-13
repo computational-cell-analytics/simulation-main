@@ -20,14 +20,15 @@ git clone https://github.com/stmartineau99/simulation-main.git
 git clone https://github.com/computational-cell-analytics/polnet-synaptic.git
 
 # clone faket-polnet repository
-[git clone https://github.com/stmartineau99/faket-polnet.git](https://github.com/computational-cell-analytics/faket-polnet.git)
+git clone https://github.com/computational-cell-analytics/faket-polnet.git
 
 cd simulation-main
 conda create -n simulation-main -f environment-gpu.yaml --channel-priority flexible
 
-# activate environment and install faket-polnet and polnet-synaptic inside
+# activate the new environment 
 conda activate simulation-main
-cd ../polnet-synaptic && pip install -e .
 
+# install polnet-synaptic and faket-polnet packages inside the environment 
+cd ../polnet-synaptic && pip install -e .
 cd ../faket-polnet && pip install -e .
 ```
