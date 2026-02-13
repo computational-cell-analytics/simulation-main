@@ -2,15 +2,20 @@
 
 ## Overview
 
-1. [polnet-synaptic]()
-2. [faket-polnet]()
+1. [PolNet](https://github.com/anmartinezs/polnet/tree/main)
+   Description.
 
-3. ## Installation
+2. [FakET](https://github.com/paloha/faket)
+   Description.
+   
+3. 3D reconstruction with IMOD
+   
+## Installation
 Requires cloning three repositories. Make sure they are cloned in separate directories. 
 
 1. simulation-main
-2. polnet-synaptic
-3. faket-polnet
+2. [polnet-synaptic](https://github.com/computational-cell-analytics/polnet-synaptic/tree/main/scripts)
+3. [faket-polnet](https://github.com/computational-cell-analytics/faket-polnet/tree/main)
    
 ```bash
 # clone this repository
@@ -31,4 +36,14 @@ conda activate simulation-main
 # install polnet-synaptic and faket-polnet packages inside the environment 
 cd ../polnet-synaptic && pip install -e .
 cd ../faket-polnet && pip install -e .
+```
+## Setup
+
+1. setup config
+2. setup base_dir with style_tomograms
+
+## Usage
+
+```bash
+main.py config.toml
 ```
