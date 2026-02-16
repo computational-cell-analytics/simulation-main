@@ -1,0 +1,64 @@
+####################################################################
+# faketGPU Conda Environment (modified for cryo-ET simulation pipeline)
+# Approx size: ~9 GB
+#
+# Original environment from: 
+#   https://github.com/paloha/faket/blob/master/environment-gpu.yml
+# Modified by: Sage Martineau
+# Date modified: 11-02-2026
+#
+# Purpose:
+#   GPU-enabled environment for noise addition with FakET style transfer, 
+#   adapted for cryo-ET simulation pipeline with PolNet.
+
+####################################################################
+# TESTED ON:
+#   Driver Version: 570.211.01
+#   CUDA Version: 12.8
+#   GPU: NVIDIA A100-SXM4 40GB
+#   Python: 3.11.8
+#
+####################################################################
+# MODIFICATIONS FROM ORIGINAL faketGPU:
+#    - numpy
+#    - pandas
+#    - scikit-learn
+#    - toml
+#
+#   Versions pinned for reproducibility on HPC.
+#
+####################################################################
+# NOTES:
+#  PyTorch will warn about depricated "pretrained" param but its OK
+####################################################################
+
+name: simulation-main
+channels:
+  - nvidia
+  - conda-forge 
+dependencies:
+  - python=3.11.8  
+  - pytorch::pytorch-cuda=12.1
+  - conda-forge::cudnn=8.9.7.29
+  - pytorch::pytorch=2.2.1                                 
+  - pytorch::torchvision=0.17.1
+  - conda-forge::mrcfile=1.5.0
+  - scikit-image=0.22.0
+  - jupyter==1.0.0
+  - scipy==1.11.4
+  - numpy
+  - pandas
+  - scikit-learn=1.8.0
+  - matplotlib=3.8.0
+  - pillow=10.2.0
+  - ipyfilechooser==0.6.0
+  - pynrrd==1.0.0
+  - mrcfile
+  - jax==0.4.23
+  - vtk==9.3.0
+  - tqdm
+  - pip>=23.3
+  - pip:
+    - toml==0.10.2
+    - wget==3.2
+  # - radontea==0.4.9 # reconstruction package used by faket, we use IMOD instead
