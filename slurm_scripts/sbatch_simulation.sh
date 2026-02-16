@@ -1,16 +1,19 @@
 #!/bin/bash
-########################################################################################################
-# Description: Integrated polnet-faket pipeline for cryo-ET data simulation. 
-#              Resource request selected for generating 20 tomograms with CZII shape (630, 630, 184).
+################################################################################
+# Description: 
+#   Simulation pipeline for cryo-ET data. 
+#   Resource allocation designed for generating 20 tomograms with CZII shape.
+#
 # Author: Sage Martineau
-# Date: 10-02-2026
+# Date: 16-02-2026
 #
 # Steps:
-#   1) polnet: generate tomograms with specified features
-#   2) faket: add noise using style transfer
+#   1) polnet-synaptic: generate tomograms with specified features
+#   2) faket-polnet: noise addition using faket style transfer, followed by 
+#                    3D reconstruction using IMOD
 #
 # Usage:
-#   sbatch sbatch_polnet_faket.sh <config.toml>
+#   sbatch sbatch_simulation.sh <config.toml>
 #
 # Resources requested:
 #   Partition: grete:interactive
@@ -19,8 +22,8 @@
 #   Nodes: 1
 #   CPUs per task: 8
 #   Memory: 40G
-#   GPU: 1g.20gb
-########################################################################################################
+#   GPU: NVIDIA A100-SXM4-80GB MIG 1g.20gb (1 slice with 20G)
+################################################################################
 
 #SBATCH -p grete:interactive
 #SBATCH --job-name=JOB_NAME
@@ -33,17 +36,16 @@
 
 CONFIG=$1
 
-# Step 1 - Polnet
+# Step 1 - polnet-synaptic
 source ~/.bashrc
-micromamba activate -p /mnt/lustre-grete/projects/nim00020/sage/envs/polnet-synaptic
+micromamba activate -n simulation-main
 
 SCRIPT_DIR=/mnt/lustre-grete/projects/nim00020/sage/source/polnet-synaptic/scripts/data_gen
 cd $SCRIPT_DIR
 
 python all_features_argument.py --config "$CONFIG"
 
-# Step 1 - Faket
-module purge
+# Step 2 - faket-polnet
 module load gcc/13.2.0
 module load imod/5.1.0
 export IMOD_DIR=/sw/rev/25.04/rome_mofed_cuda80_rocky8/linux-rocky8-zen2/gcc-13.2.0/imod-5.1.0-ucflk2pud47w7jj27xr5zzitis7kredg
