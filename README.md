@@ -44,6 +44,4 @@ cd ../faket-polnet && pip install -e .
 
 ## Usage
 
-```bash
-main.py config.toml
-```
+
