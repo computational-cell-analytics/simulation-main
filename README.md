@@ -1,4 +1,4 @@
-# An inegration pipeline for cryo-ET data simulation with PolNet and FakET.
+# An inegrated pipeline for cryo-ET data simulation with PolNet and FakET.
 
 ## Overview
 
