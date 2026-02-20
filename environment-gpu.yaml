@@ -59,7 +59,7 @@ dependencies:
   - tqdm=4.67.3 
   - pip>=23.3
   - pip:
-    - configargparse=1.7.1
+    - configargparse==1.7.1
     - toml==0.10.2
     - wget==3.2
   # - radontea==0.4.9 # reconstruction package used by faket, we use IMOD instead

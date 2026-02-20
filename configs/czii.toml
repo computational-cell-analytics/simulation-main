@@ -1,5 +1,5 @@
 [tool.polnet]
-out_dir = "/mnt/lustre-grete/projects/nim00020/sage/data/simulation/test_dataset/simulation_dir_0"
+out_dir = "/mnt/lustre-grete/usr/u12095/cryo-et/simulation_test/simulation_dir_0"
 seed = 0
 ntomos = 20
 voi_vsize = 10 
@@ -22,7 +22,7 @@ disable_membranes = true
 disable_helix = true
 
 [tool.faket]
-base_dir = "/mnt/lustre-grete/projects/nim00020/sage/data/simulation/test_dataset"
+base_dir = "/mnt/lustre-grete/usr/u12095/cryo-et/simulation_test"
 style_index = 0
 simulation_index = 0
 train_dir_index = 0

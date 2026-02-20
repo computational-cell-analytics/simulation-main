@@ -27,7 +27,7 @@
 
 #SBATCH -p grete:interactive
 #SBATCH --job-name=JOB_NAME
-#SBATCH -o data/simulation/slurm_logs/slurm-%j_%x.out
+#SBATCH -o slurm_logs/slurm-%j_%x.out
 #SBATCH -t 2:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
@@ -40,7 +40,7 @@ CONFIG=$1
 source ~/.bashrc
 micromamba activate -n simulation-main
 
-SCRIPT_DIR=/mnt/lustre-grete/projects/nim00020/sage/source/polnet-synaptic/scripts/data_gen
+SCRIPT_DIR=/user/muth9/u12095/simulation/polnet-synaptic/scripts/data_gen
 cd $SCRIPT_DIR
 
 python all_features_argument.py --config "$CONFIG"
@@ -51,9 +51,9 @@ module load imod/5.1.0
 export IMOD_DIR=/sw/rev/25.04/rome_mofed_cuda80_rocky8/linux-rocky8-zen2/gcc-13.2.0/imod-5.1.0-ucflk2pud47w7jj27xr5zzitis7kredg
 source $IMOD_DIR/IMOD-linux.sh
 
-micromamba activate -p /mnt/lustre-grete/projects/nim00020/sage/envs/faket-polnet
+micromamba activate -p /mnt/vast-nhr/home/muth9/u12095/micromamba/envs/simulation-main
 
-SCRIPT_DIR=/mnt/lustre-grete/projects/nim00020/sage/source/faket-polnet
+SCRIPT_DIR=/user/muth9/u12095/simulation/faket-polnet
 cd $SCRIPT_DIR
 
 python pipeline.py --config "$CONFIG"
