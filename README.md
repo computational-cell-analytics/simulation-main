@@ -44,6 +44,22 @@ cd ../faket-polnet && pip install -e .
 
 ## Usage
 
+**1. Download pretrained weights.**
+
+Faket uses a pretrained VGG19 model for neural style transfer.
+
+On most HPC systems, compute nodes do not have internet access, therefore it is recommended to first download the model weights using the login node before running the pipeline. Run the following command inside your environment:
+
+```bash
+python - <<'EOF'
+from torchvision.models import vgg19, VGG19_Weights
+vgg19(weights=VGG19_Weights.DEFAULT)
+EOF
+```
+The weights will be cached locally, and SLURM will automatically locate the cached file.
+
+**2. Running the pipeline.**
+
 After defining your config you can run the integregated pipeline using the example SLURM script at `slurm_scripts/sbatch_simulation.sh`.
 
 Alternatively, you can create a folder containing multiple configs. I have created a submission script which will create one SLURM job for each config in a directory; see `slurm_scripts/submit_simulation.sh`.
