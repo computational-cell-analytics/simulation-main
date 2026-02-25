@@ -11,7 +11,7 @@ The original source code used in our simulation pipeline:
 3. 3D reconstruction with IMOD
    
 ## Installation
-These are instructions for installing both PolNet and FakET in the `simulation-main` environment. Requires cloning three repositories. Make sure they are cloned in separate directories. 
+These are instructions for installing both PolNet and FakET in the `simulation-main` environment. This requires cloning three repositories; make sure they are cloned in separate directories. 
 
 1. simulation-main
 2. [polnet-synaptic](https://github.com/computational-cell-analytics/polnet-synaptic/tree/main/scripts)
