@@ -8,9 +8,12 @@
 # Date: 16-02-2026
 #
 # Steps:
-#   1) polnet-synaptic: generate tomograms with specified features
-#   2) faket-polnet: noise addition using faket style transfer, followed by 
-#                    3D reconstruction using IMOD
+#   1) polnet-synaptic
+#      Generate tomograms with specified features, including membranes, actin, microtubules,
+#      and cytosolic proteins. 
+#
+#   2) faket-polnet
+#      Noise addition using FakET style transfer, followed by 3D reconstruction using IMOD.
 #
 # Usage:
 #   sbatch sbatch_simulation.sh <config.toml>

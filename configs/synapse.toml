@@ -1,0 +1,47 @@
+[tool.polnet]
+out_dir = "/projects/extern/nhr/nhr_ni/nim00020/dir.project/sage/data/simulation/testing/run7/simulation_dir_0"
+root_path = "/projects/extern/nhr/nhr_ni/nim00020/dir.project/sage/source/polnet-synaptic/data/synapse"
+seed = 10
+ntomos = 3
+voi_vsize = 10 
+voi_shape = [630, 630, 184]
+
+# feature lists
+membranes_list = [
+    "in_mbs/ellipse.mbs",
+]
+helix_list = [
+    "in_helix/mt.hns",
+    "in_helix/actin.hns"
+]
+mb_proteins_list = [
+    "in_10A/mb_7tmr_10A.pms",
+    "in_10A/mb_1l4a_10A.pms",
+    "in_10A/mb_7udb_10A.pms",
+    "in_10A/mb_8sbe_10A.pms",
+    "in_10A/mb_9brz_10A.pms",
+    "in_10A/mb_VMAT_10A.pms",
+    "in_10A/mb_VGLUT_10A.pms",
+    "in_10A/mb_Synaptotagmin_10A.pms",
+    "in_10A/mb_Synaptophysin_10A.pms",
+    "in_10A/mb_rab3_10A.pms"
+]
+# feature selection
+disable_cytosolic_proteins = true
+disable_mb_proteins = false
+
+# occupancy
+actin_pmer_occ = 1
+mt_pmer_occ = 0.5
+mmer_tries = 1
+pmer_tries = 1000
+
+[tool.faket]
+base_dir = "/projects/extern/nhr/nhr_ni/nim00020/dir.project/sage/data/simulation/testing/run7"
+simulation_index = 0
+micrograph_index = 0
+train_dir_index = 0
+detector_snr = [0.3, 0.4]
+tilt_start = -54
+tilt_stop = 54
+tilt_step = 3
