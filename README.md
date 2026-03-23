@@ -29,7 +29,6 @@ The **Default** mode is a general-purpose simulator that can enable or disable a
 
 ## Data Flow
 
-```
 TOML Config
     │
     ▼
@@ -59,7 +58,6 @@ Phase 2: **faket-polnet** (pipeline.py)
   train_dir_{train_dir_index}/
     ├── faket_tomograms/             ← final style-transferred, reconstructed tomograms
     └── overlay/                     ← ground-truth particle annotations (JSON)
-```
 
 ---
 
