@@ -29,10 +29,11 @@ The **Default** mode is a general-purpose simulator that can enable or disable a
 
 ## Data Flow
 
+```
 TOML Config
     │
     ▼
-Phase 1: **polnet-synaptic**: (`all_features_argument.py`  OR  `all_features_synapse.py`)
+Phase 1: polnet-synaptic (`all_features_argument.py`  OR  `all_features_synapse.py`)
   ├── Generate membranes (sphere, ellipsoid, toroid)
   ├── Generate actin networks
   ├── Generate microtubule networks
@@ -46,7 +47,7 @@ Phase 1: **polnet-synaptic**: (`all_features_argument.py`  OR  `all_features_syn
     └── tomos_motif_list.csv         ← particle types, positions, orientations
        │
        ▼
-Phase 2: **faket-polnet** (pipeline.py)
+Phase 2: faket-polnet (pipeline.py)
   ├── Project style tomograms        → style tilt series (IMOD `xyzproj`)
   ├── Label transform                → output JSON annotations in CZII challenge format
   ├── Project synthetic densities    → clean + noisy tilt series (IMOD `xyzproj`)
@@ -58,6 +59,7 @@ Phase 2: **faket-polnet** (pipeline.py)
   train_dir_{train_dir_index}/
     ├── faket_tomograms/             ← final style-transferred, reconstructed tomograms
     └── overlay/                     ← ground-truth particle annotations (JSON)
+```
 
 ---
 
@@ -117,6 +119,7 @@ EOF
 ```
 
 The weights will be cached locally, and SLURM will automatically locate the cached file.
+
 ---
 
 ## Usage
