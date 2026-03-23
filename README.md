@@ -1,67 +1,115 @@
-# An integrated pipeline for cryo-ET data simulation with PolNet and FakET.
-This repository provides a simulation-pipeline for cryo-ET data generation. All simulation parameters are controlled through configuration files, enabling reproducbile and scalable experiments. 
+# An Integrated Pipeline for Cryo-ET Data Simulation
 
-This repository also provides example SLURM scripts for running the pipeline on HPC systems. 
+This repository orchestrates a two-step ipeline for generating synthetic cryo-ET training datasets with ground-truth labels for downstream machine learning tasks (e.g., particle picking, segmentation). All simulation parameters are controlled through TOML configuration files, enabling reproducible and scalable experiments on HPC systems.
 
 ## Overview
-The original source code used in our simulation pipeline:
-1. [PolNet](https://github.com/anmartinezs/polnet/tree/main)
-   Generate tomograms from specified features. 
 
-2. [FakET](https://github.com/paloha/faket)
-   Noise addition using neural style transfer.
-   
-3. 3D reconstruction with IMOD
-   
+Pipeline dependencies:
+
+1. **[polnet-synaptic](https://github.com/computational-cell-analytics/polnet-synaptic)** — Simulates a 3D cellular environment (membranes, actin filaments, microtubules, cytosolic proteins, membrane-bound proteins) and outputs clean 3D density maps with ground-truth labels.
+2. **[faket-polnet](https://github.com/computational-cell-analytics/faket-polnet)** — Takes those density maps, simulates the TEM imaging process (tilt series projection), applies VGG19-based neural style transfer to impose real cryo-ET noise textures, and reconstructs final 3D tomograms via IMOD weighted back-projection.
+3. **IMOD** — Used for tilt series projection (`xyzproj`) and 3D reconstruction (`tilt`). Must be available as a module on your HPC.
+
+This repository (`simulation-main`) contains no simulation code itself — it provides the TOML configs and SLURM scripts that coordinate the other two packages.
+
+---
+
+## Pipeline Variants
+
+The polnet synaptic has two modes, each with a different entry point script:
+
+| Mode | Script | Membranes | Cytoskeleton | Proteins |
+|---|---|---|---|---|
+| **Default** | `all_features_argument.py` | sphere, ellipsoid, toroid | actin, microtubules | cytosolic proteins |
+| **Synapse** | `all_features_synapse.py` | ellipsoid (synaptic vesicles) | actin, microtubules | synaptic membrane proteins (VGLUT, VMAT, Rab3, etc.) |
+
+The **default** mode is a general-purpose simulator that can enable or disable any combination of features. The **synapse** mode handles a special case where all membranes are ellipsoidal to approximate synaptic vesicles, and synaptic membrane proteins are generated on the vesicle surfaces.
+
+---
+
+## Data Flow
+
+```
+TOML Config
+    │
+    ▼
+Phase 1: **polnet-synaptic**: (`all_features_argument.py`  OR  `all_features_synapse.py`)
+  ├── Generate membranes (sphere, ellipsoid, toroid)
+  ├── Generate actin networks
+  ├── Generate microtubule networks
+  ├── Place cytosolic proteins
+  └── Place membrane-bound proteins 
+       │
+       ▼
+  simulation_dir_{simulation_dir_index}/
+    ├── tomo_den_N.mrc               ← clean 3D density map
+    ├── tomo_lbls_N.mrc              ← label mask
+    └── tomos_motif_list.csv         ← particle types, positions, orientations
+       │
+       ▼
+Phase 2: **faket-polnet** (pipeline.py)
+  ├── Project style tomograms        → style tilt series (IMOD `xyzproj`)
+  ├── Label transform                → output JSON annotations in CZII challenge format
+  ├── Project synthetic densities    → clean + noisy tilt series (IMOD `xyzproj`)
+  ├── FakET neural style transfer    → style-transfered tilt series
+  ├── 3D reconstruction              → style-transfered tomograms (IMOD `tilt`)
+  └── Collect results
+       │
+       ▼
+  train_dir_{train_dir_index}/
+    ├── faket_tomograms/             ← final style-transferred, reconstructed tomograms
+    └── overlay/                     ← ground-truth particle annotations (JSON)
+```
+
+---
+
 ## Installation
-These are instructions for installing both PolNet and FakET in the `simulation-main` environment. This requires cloning three repositories; make sure they are cloned in separate directories. 
 
-1. simulation-main
-2. [polnet-synaptic](https://github.com/computational-cell-analytics/polnet-synaptic/tree/main/scripts)
-3. [faket-polnet](https://github.com/computational-cell-analytics/faket-polnet/tree/main)
-   
+Clone all three repositories into the same parent directory:
+
 ```bash
-# clone this repository
 git clone https://github.com/computational-cell-analytics/simulation-main.git
-
-# clone polnet-synaptic repository
 git clone https://github.com/computational-cell-analytics/polnet-synaptic.git
-
-# clone faket-polnet repository
 git clone https://github.com/computational-cell-analytics/faket-polnet.git
+```
 
+Create and activate the conda environment:
+
+```bash
 cd simulation-main
-conda create -n simulation-main -f environment-gpu.yaml --channel-priority flexible
-
-# activate the new environment 
+conda env create -n simulation-main -f environment-gpu.yaml --channel-priority flexible
 conda activate simulation-main
+```
 
-# install polnet-synaptic and faket-polnet packages inside the environment 
+Install polnet-synaptic and faket-polnet into the environment:
+
+```bash
 cd ../polnet-synaptic && pip install -e .
 cd ../faket-polnet && pip install -e .
 ```
+
+---
+
 ## Setup
 
-### 1. Setup config.
+### 1. Configure the TOML file
 
-See example config at `configs/czii.toml`. 
+A single TOML file controls both phases of the pipeline. See `configs/czii.toml` (default mode) or `configs/synapse.toml` (synapse mode) for examples.
 
-The config specifies parameters for both [polnet-synaptic](https://github.com/computational-cell-analytics/polnet-synaptic/tree/main/scripts) and [faket-polnet](https://github.com/computational-cell-analytics/faket-polnet/tree/main); check those repositories for more details.
+- `[tool.polnet]` — controls Phase 1
+- `[tool.faket]` — controls Phase 2 
 
+See [polnet-synaptic](https://github.com/computational-cell-analytics/polnet-synaptic) and [faket-polnet](https://github.com/computational-cell-analytics/faket-polnet) for more detailed parameter documentation.
 
-### 2. Setup directory structure.
+### 2. Set up the directory structure
 
-Setup FakET `base_dir` with `style_tomograms_{style_index}`. 
+In your `base_dir` (defined in `[tool.faket]`), create a `style_tomograms_{style_index}` directory containing experimental tomograms to use as style references for neural style transfer.
 
-In `base_dir`, PolNet will create a directory called `simulation_dir_{simulation_index}`, which will be used as the input for FakET, along with the user-provided style tomograms.
+Phase 1 will automatically create `simulation_dir_{simulation_index}/` inside `base_dir`. Phase 2 will use both directories as input and write final outputs to `train_dir_{train_dir_index}/`.
 
-## Usage
+### 3. Download pretrained VGG19 weights
 
-### 1. Download pretrained weights.
-
-Faket uses a pretrained VGG19 model for neural style transfer.
-
-On most HPC systems, compute nodes do not have internet access, therefore it is recommended to first download the model weights using the login node before running the pipeline. Run the following command inside your environment:
+FakET uses a pretrained VGG19 model for neural style transfer. On most HPC systems, compute nodes do not have internet access, so download the weights from the login node before running any jobs:
 
 ```bash
 python - <<'EOF'
@@ -69,10 +117,24 @@ from torchvision.models import vgg19, VGG19_Weights
 vgg19(weights=VGG19_Weights.DEFAULT)
 EOF
 ```
+
 The weights will be cached locally, and SLURM will automatically locate the cached file.
+---
 
-### 2. Running the pipeline.
+## Usage
 
-After defining your config you can run the integregated pipeline using the example SLURM script at `slurm_scripts/sbatch_simulation.sh`.
+### Default mode
 
-Alternatively, you can create a folder containing multiple configs. I have created a submission script which will create one SLURM job for each config in a directory; see `slurm_scripts/submit_simulation.sh`.
+Place multiple `.toml` files in a directory and use the submission wrapper, which runs both phases of the pipeline for each config in parallel.
+
+```bash
+bash slurm_scripts/czii/submit_simulation.sh
+```
+
+### Synapse mode
+
+For the synapse mode, use the submission wrapper:
+
+```bash
+bash slurm_scripts/synapse/submit_simulation.sh
+```
