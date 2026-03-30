@@ -1,7 +1,7 @@
 #!/bin/bash
 ############################################################################################
 # Description:
-#   Submit script for the full simulation pipeline: PolNet + 3-stage parallel FakET.
+#   Submit script for the full simulation pipeline: PolNet (default) + 3-stage parallel FakET.
 #   Loops over config files in CONFIG_DIR and submits four chained SLURM jobs per file.
 #
 # Usage:
@@ -9,12 +9,12 @@
 #       - PARENT_DIR: Root directory of the project.
 #       - CONFIG_DIR: Directory containing config files.
 #       - JSON_DIR:   Directory to collect SLURM metrics.
-#       - POLNET_SCRIPT:  Path to sbatch_polnet_synapse_array.sh.
+#       - POLNET_SCRIPT:  Path to sbatch_polnet_default_array.sh.
 #       - FAKET_SCRIPT1:  Path to sbatch_faket_stage1.sh.
 #       - FAKET_SCRIPT2:  Path to sbatch_faket_stage2_array.sh.
 #       - FAKET_SCRIPT3:  Path to sbatch_faket_stage3.sh.
 #
-#   2) Set --array in sbatch_polnet_synapse_array.sh to match the number of tomograms.
+#   2) Set --array in sbatch_polnet_default_array.sh to match the number of tomograms.
 #
 #   3) Set --array in sbatch_faket_stage2_array.sh to match the number of tomograms.
 #
@@ -39,11 +39,11 @@
 ############################################################################################
 
 PARENT_DIR=/projects/extern/nhr/nhr_ni/nim00020/dir.project/sage
-CONFIG_DIR=$PARENT_DIR/data/simulation/synapse_dataset_0/configs
-JSON_DIR=$PARENT_DIR/data/simulation/synapse_dataset_0/slurm_metrics
+CONFIG_DIR=$PARENT_DIR/data/simulation/default_dataset_0/configs
+JSON_DIR=$PARENT_DIR/data/simulation/default_dataset_0/slurm_metrics
 mkdir -p $JSON_DIR
 
-POLNET_SCRIPT=$PARENT_DIR/slurm_scripts/synapse/sbatch_polnet_synapse_array.sh
+POLNET_SCRIPT=$PARENT_DIR/slurm_scripts/default/sbatch_polnet_default_array.sh
 FAKET_SCRIPT1=$PARENT_DIR/slurm_scripts/faket/sbatch_faket_stage1.sh
 FAKET_SCRIPT2=$PARENT_DIR/slurm_scripts/faket/sbatch_faket_stage2_array.sh
 FAKET_SCRIPT3=$PARENT_DIR/slurm_scripts/faket/sbatch_faket_stage3.sh

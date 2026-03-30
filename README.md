@@ -20,7 +20,7 @@ The polnet synaptic has two modes, each with a different entry point script:
 
 | Mode | Script | Membranes | Cytoskeleton | Proteins |
 |---|---|---|---|---|
-| **Default** | `all_features_argument.py` | sphere, ellipsoid, toroid | actin, microtubules | cytosolic proteins, membrane proteins |
+| **Default** | `all_features_default.py` | sphere, ellipsoid, toroid | actin, microtubules | cytosolic proteins, membrane proteins |
 | **Synapse** | `all_features_synapse.py` | ellipsoid (synaptic vesicles) | actin, microtubules | synaptic membrane proteins |
 
 The **Default** mode is a general-purpose simulator that can enable or disable any combination of features. The **Synapse** mode handles a special case where all membranes are ellipsoidal to approximate synaptic vesicles, and synaptic membrane proteins are generated on the vesicle surfaces.
@@ -33,7 +33,7 @@ The **Default** mode is a general-purpose simulator that can enable or disable a
 TOML Config
     │
     ▼
-Phase 1: polnet-synaptic (`all_features_argument.py`  OR  `all_features_synapse.py`)
+Phase 1: polnet-synaptic (`all_features_default.py`  OR  `all_features_synapse.py`)
   ├── Generate membranes (sphere, ellipsoid, toroid)
   ├── Generate actin networks
   ├── Generate microtubule networks
@@ -44,16 +44,19 @@ Phase 1: polnet-synaptic (`all_features_argument.py`  OR  `all_features_synapse.
   simulation_dir_{simulation_dir_index}/
     ├── tomo_den_N.mrc               ← clean 3D density map
     ├── tomo_lbls_N.mrc              ← label mask
-    └── tomos_motif_list.csv         ← particle types, positions, orientations
+    └── tomos_motif_list_{N}.csv     ← particle types, positions, orientations (per tomogram)
        │
        ▼
-Phase 2: faket-polnet (pipeline.py)
+Phase 2: faket-polnet (pipeline_parallel.py, 3 stages)
+  Stage 1 (CPU):
   ├── Project style tomograms        → style tilt series (IMOD `xyzproj`)
-  ├── Label transform                → output JSON annotations in CZII challenge format
+  └── Label transform                → output JSON annotations in CZII challenge format
+  Stage 2 (GPU, array job — one task per tomogram):
   ├── Project synthetic densities    → clean + noisy tilt series (IMOD `xyzproj`)
-  ├── FakET neural style transfer    → style-transfered tilt series
-  ├── 3D reconstruction              → style-transfered tomograms (IMOD `tilt`)
-  └── Collect results
+  ├── FakET neural style transfer    → style-transferred tilt series
+  └── 3D reconstruction              → style-transferred tomograms (IMOD `tilt`)
+  Stage 3 (CPU):
+  └── Merge JSON metadata and collect reconstructed tomograms
        │
        ▼
   train_dir_{train_dir_index}/
@@ -129,7 +132,7 @@ The weights will be cached locally, and SLURM will automatically locate the cach
 Place multiple `.toml` files in a directory and use the submission wrapper, which runs both phases of the pipeline for each config in parallel.
 
 ```bash
-bash slurm_scripts/czii/submit_simulation.sh
+bash slurm_scripts/default/submit_simulation_default.sh
 ```
 
 ### Synapse mode
@@ -137,5 +140,5 @@ bash slurm_scripts/czii/submit_simulation.sh
 For the synapse mode, use the submission wrapper:
 
 ```bash
-bash slurm_scripts/synapse/submit_simulation.sh
+bash slurm_scripts/synapse/submit_simulation_synapse.sh
 ```
