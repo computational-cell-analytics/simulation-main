@@ -84,6 +84,7 @@ submit_job() {
 
     sbatch --job-name="${job_name}_metrics" \
         --dependency=afterany:$job_id \
+        --output=/dev/null \
         --wrap="source ~/.bashrc && \
                 micromamba activate simulation-main && \
                 python $PARENT_DIR/slurm_scripts/collect_slurm_metrics.py $job_id --out_path $json $metrics_array_flag" > /dev/null
