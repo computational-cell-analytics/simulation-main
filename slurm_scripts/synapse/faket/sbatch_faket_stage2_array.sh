@@ -17,13 +17,13 @@
 #   - CPUs per task:  8
 #   - Memory:         20G
 #   - GPU:            1g.20gb
-#
+
 # Notes:
 #   - IMOD module is loaded for 3D reconstruction.
 #   - Run submit_faket_parallel.sh to submit the full 3-stage pipeline.
 ############################################################################################
 
-#SBATCH -p grete:interactive
+#SBATCH -p grete:
 #SBATCH --job-name=faket_stage2
 #SBATCH --array=0-2
 #SBATCH -o /projects/extern/nhr/nhr_ni/nim00020/dir.project/sage/data/simulation/slurm_logs/slurm-%A_%a.out
