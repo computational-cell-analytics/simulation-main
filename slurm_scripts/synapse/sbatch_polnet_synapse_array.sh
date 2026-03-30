@@ -4,11 +4,8 @@
 #   Pipeline Step 1: SLURM job array script for synapse simulation using PolNet.
 #
 # Usage:
-#   - sbatch sbatch_polnet_synapse_array.sh <config>
-#   - The job array size specified by --array should be set to the desired number of
-#     tomograms, where one array task produces one tomogram. To generate 10 tomograms:
-#      
-#       #SBATCH --array=0-9
+#   - Do not run directly. Called by submit_simulation_synapse.sh, which passes --array
+#     based on N_TOMOS. One array task produces one tomogram.
 #
 # Resources requested per array task:
 #   - Partition:      large96s
@@ -22,10 +19,9 @@
 ############################################################################################
 
 #SBATCH -p large96s
-#SBATCH --job-name=polnet_array
-#SBATCH --array=0-2
+#SBATCH --job-name=polnet_synapse
 #SBATCH -o /projects/extern/nhr/nhr_ni/nim00020/dir.project/sage/data/simulation/slurm_logs/slurm-%A_%a.out
-#SBATCH -t 24:00:00
+#SBATCH -t 12:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=20G

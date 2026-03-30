@@ -5,11 +5,8 @@
 #   reconstruction. One array task processes one tomogram.
 #
 # Usage:
-#   - sbatch sbatch_faket_stage2_array.sh <config>
-#   - The job array size specified by --array should match the number of tomograms
-#     generated in Stage 1. To process 3 tomograms (indices 0-2):
-#
-#       #SBATCH --array=0-2
+#   - Do not run directly. Called by submit_simulation_synapse.sh or submit_simulation_default.sh,
+#     which passes --array based on N_TOMOS. One array task processes one tomogram.
 #
 # Resources requested per array task:
 #   - Partition:      grete:interactive
@@ -20,12 +17,10 @@
 
 # Notes:
 #   - IMOD module is loaded for 3D reconstruction.
-#   - Run submit_faket_parallel.sh to submit the full 3-stage pipeline.
 ############################################################################################
 
 #SBATCH -p grete:
 #SBATCH --job-name=faket_stage2
-#SBATCH --array=0-2
 #SBATCH -o /projects/extern/nhr/nhr_ni/nim00020/dir.project/sage/data/simulation/slurm_logs/slurm-%A_%a.out
 #SBATCH -t 2:00:00
 #SBATCH --nodes=1
@@ -46,6 +41,6 @@ source $IMOD_DIR/IMOD-linux.sh
 SCRIPT_DIR=/projects/extern/nhr/nhr_ni/nim00020/dir.project/sage/source/faket-polnet
 cd $SCRIPT_DIR
 
-python faket_polnet/pipeline_parallel.py \
+python pipeline_parallel.py \
   --config "$CONFIG" \
   --stage 2

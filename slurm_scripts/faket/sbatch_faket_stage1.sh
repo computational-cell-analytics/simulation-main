@@ -15,7 +15,6 @@
 #
 # Notes:
 #   - IMOD module is loaded for style micrograph projection.
-#   - Run submit_faket_parallel.sh to submit the full 3-stage pipeline.
 ############################################################################################
 
 #SBATCH -p large96s
@@ -38,6 +37,6 @@ source $IMOD_DIR/IMOD-linux.sh
 SCRIPT_DIR=/projects/extern/nhr/nhr_ni/nim00020/dir.project/sage/source/faket-polnet
 cd $SCRIPT_DIR
 
-python faket_polnet/pipeline_parallel.py \
+python pipeline_parallel.py \
   --config "$CONFIG" \
   --stage 1
