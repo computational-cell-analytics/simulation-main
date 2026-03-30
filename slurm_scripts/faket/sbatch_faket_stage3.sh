@@ -17,7 +17,6 @@
 
 #SBATCH -p large96s
 #SBATCH --job-name=faket_stage3
-#SBATCH -o /projects/extern/nhr/nhr_ni/nim00020/dir.project/sage/data/simulation/slurm_logs/slurm-%j_%x.out
 #SBATCH -t 0:30:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=4

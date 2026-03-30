@@ -21,7 +21,6 @@
 
 #SBATCH -p grete:shared
 #SBATCH --job-name=faket_stage2
-#SBATCH -o /projects/extern/nhr/nhr_ni/nim00020/dir.project/sage/data/simulation/slurm_logs/slurm-%A_%a.out
 #SBATCH -t 2:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8

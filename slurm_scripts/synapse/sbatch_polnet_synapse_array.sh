@@ -20,7 +20,6 @@
 
 #SBATCH -p large96s
 #SBATCH --job-name=polnet_synapse
-#SBATCH -o /projects/extern/nhr/nhr_ni/nim00020/dir.project/sage/data/simulation/slurm_logs/slurm-%A_%a.out
 #SBATCH -t 12:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8

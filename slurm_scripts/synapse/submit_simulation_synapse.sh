@@ -38,7 +38,8 @@
 PARENT_DIR=/projects/extern/nhr/nhr_ni/nim00020/dir.project/sage
 CONFIG_DIR=$PARENT_DIR/data/simulation/synapse_dataset_0/configs
 JSON_DIR=$PARENT_DIR/data/simulation/synapse_dataset_0/slurm_metrics
-mkdir -p $JSON_DIR
+LOG_DIR=$PARENT_DIR/data/simulation/slurm_logs
+mkdir -p $JSON_DIR $LOG_DIR
 
 N_TOMOS=3
 ARRAY_RANGE="0-$((N_TOMOS - 1))"
@@ -61,7 +62,16 @@ submit_job() {
     local array_flag=""
     [[ -n "$array_range" ]] && array_flag="--array=$array_range"
 
-    local job_id=$(sbatch --job-name=$job_name $dependency_flag $array_flag $script $config | awk '{print $4}')
+    local log_pattern=""
+    if [[ -n "$array_range" ]]; then
+        log_pattern="$LOG_DIR/slurm-%A_%a.out"
+    else
+        log_pattern="$LOG_DIR/slurm-%j_%x.out"
+    fi
+
+    local job_id=$(sbatch --job-name=$job_name $dependency_flag $array_flag \
+        --output="$log_pattern" \
+        $script $config | awk '{print $4}')
     if [[ -z "$job_id" ]]; then
         echo "ERROR: Failed to submit $job_name. Aborting." >&2
         exit 1
