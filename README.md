@@ -47,15 +47,15 @@ Phase 1: polnet-synaptic (`all_features_default.py`  OR  `all_features_synapse.p
     └── tomos_motif_list_{N}.csv     ← particle types, positions, orientations (per tomogram)
        │
        ▼
-Phase 2: faket-polnet (pipeline_parallel.py, 3 stages)
-  Stage 1 (CPU):
+Phase 2: faket-polnet (`pipeline_parallel.py`)
+  Stage 1: Setup
   ├── Project style tomograms        → style tilt series (IMOD `xyzproj`)
   └── Label transform                → output JSON annotations in CZII challenge format
-  Stage 2 (GPU, array job — one task per tomogram):
+  Stage 2: Style Transfer
   ├── Project synthetic densities    → clean + noisy tilt series (IMOD `xyzproj`)
   ├── FakET neural style transfer    → style-transferred tilt series
   └── 3D reconstruction              → style-transferred tomograms (IMOD `tilt`)
-  Stage 3 (CPU):
+  Stage 3: Cleanup
   └── Merge JSON metadata and collect reconstructed tomograms
        │
        ▼
