@@ -9,24 +9,24 @@
 #     which passes --array based on N_TOMOS. One array task processes one tomogram.
 #
 # Resources requested per array task:
-#   - Partition:      grete:interactive
+#   - Partition:      grete:shared
 #   - Time limit:     2 hours
 #   - CPUs per task:  8
 #   - Memory:         20G
-#   - GPU:            1g.20gb
-
+#   - GPU:            A100:1
+#
 # Notes:
 #   - IMOD module is loaded for 3D reconstruction.
 ############################################################################################
 
-#SBATCH -p grete:
+#SBATCH -p grete:shared
 #SBATCH --job-name=faket_stage2
 #SBATCH -o /projects/extern/nhr/nhr_ni/nim00020/dir.project/sage/data/simulation/slurm_logs/slurm-%A_%a.out
 #SBATCH -t 2:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=20G
-#SBATCH -G 1g.20gb:1
+#SBATCH -G A100:1
 #SBATCH --qos=2h
 
 CONFIG=$1
