@@ -95,8 +95,8 @@ submit_job() {
 for CONFIG in $CONFIG_DIR/*.toml; do
     CONFIG_NAME=$(basename $CONFIG .toml)
 
-    JOB1_ID=$(submit_job "polnet_${CONFIG_NAME}" $POLNET_SCRIPT $CONFIG "" "$ARRAY_RANGE")
-    JOB2_ID=$(submit_job "faket_s1_${CONFIG_NAME}" $FAKET_SCRIPT1 $CONFIG $JOB1_ID "")
-    JOB3_ID=$(submit_job "faket_s2_${CONFIG_NAME}" $FAKET_SCRIPT2 $CONFIG $JOB2_ID "$ARRAY_RANGE")
-    JOB4_ID=$(submit_job "faket_s3_${CONFIG_NAME}" $FAKET_SCRIPT3 $CONFIG $JOB3_ID "")
+    JOB1_ID=$(submit_job "polnet_${CONFIG_NAME}" $POLNET_SCRIPT $CONFIG "" "$ARRAY_RANGE") || exit 1
+    JOB2_ID=$(submit_job "faket_s1_${CONFIG_NAME}" $FAKET_SCRIPT1 $CONFIG $JOB1_ID "") || exit 1
+    JOB3_ID=$(submit_job "faket_s2_${CONFIG_NAME}" $FAKET_SCRIPT2 $CONFIG $JOB2_ID "$ARRAY_RANGE") || exit 1
+    JOB4_ID=$(submit_job "faket_s3_${CONFIG_NAME}" $FAKET_SCRIPT3 $CONFIG $JOB3_ID "") || exit 1
 done
