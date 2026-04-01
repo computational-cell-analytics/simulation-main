@@ -38,7 +38,7 @@
 PARENT_DIR=/projects/extern/nhr/nhr_ni/nim00020/dir.project/sage
 CONFIG_DIR=$PARENT_DIR/data/simulation/default_dataset_0/configs
 JSON_DIR=$PARENT_DIR/data/simulation/default_dataset_0/slurm_metrics
-LOG_DIR=$PARENT_DIR/data/simulation/slurm_logs
+LOG_DIR=$PARENT_DIR/data/simulation/default_dataset_0/slurm_logs
 mkdir -p $JSON_DIR $LOG_DIR
 
 N_TOMOS=3
@@ -83,6 +83,7 @@ submit_job() {
     [[ -n "$array_range" ]] && metrics_array_flag="--is_array"
 
     sbatch --job-name="${job_name}_metrics" \
+        --partition=large96s \
         --dependency=afterany:$job_id \
         --output=/dev/null \
         --wrap="source ~/.bashrc && \

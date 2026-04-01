@@ -83,6 +83,7 @@ submit_job() {
     [[ -n "$array_range" ]] && metrics_array_flag="--is_array"
 
     sbatch --job-name="${job_name}_metrics" \
+        --partition=large96s \
         --dependency=afterany:$job_id \
         --output=/dev/null \
         --wrap="source ~/.bashrc && \
