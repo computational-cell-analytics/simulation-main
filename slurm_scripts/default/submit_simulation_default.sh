@@ -74,7 +74,7 @@ submit_job() {
         $script $config | awk '{print $4}')
     if [[ -z "$job_id" ]]; then
         echo "ERROR: Failed to submit $job_name. Aborting." >&2
-        exit 1
+        return 1
     fi
     echo "Submitted $job_name as job $job_id." >&2
 
