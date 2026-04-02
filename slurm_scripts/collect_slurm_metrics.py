@@ -10,27 +10,32 @@ def parse_sacct(job_id, out_path=None, is_array=False):
         "--parsable2",
         "--noheader",
         "--units", "G",
-        "--format=JobIDRaw,JobName,Elapsed,TotalCPU,AllocCPUS,ReqMem,MaxRSS,State"
+        "--format=JobID,JobName,Submit,Elapsed,TotalCPU,AllocCPUS,ReqMem,MaxRSS,State"
     ], capture_output=True, text=True)
 
     tasks = []
 
     for line in result.stdout.strip().splitlines():
         fields = line.split("|")
-        job_id_raw, job_name, elapsed, total_cpu, alloc_cpus, req_mem, max_rss, state = fields
+        job_id_fmt, job_name, submit, elapsed, total_cpu, alloc_cpus, req_mem, max_rss, state = fields
 
-        if not any(job_id_raw.endswith(s) for s in [".batch", ".extern"]):
+        if not any(job_id_fmt.endswith(s) for s in [".batch", ".extern"]):
             current_job_name = job_name
             current_req_mem = req_mem
+            current_submit = submit
             continue
 
-        if not job_id_raw.endswith(".batch"):
+        if not job_id_fmt.endswith(".batch"):
             continue
-        
-        task_id = job_id_raw.replace(".batch", "")
+
+        task_id = job_id_fmt.replace(".batch", "")
+        # JobID for array tasks is reported as "parentID_arrayIndex"
+        array_task_id = task_id.split("_")[1] if "_" in task_id else None
 
         tasks.append({
             "task_id": task_id,
+            "array_task_id": array_task_id,
+            "submit": current_submit,
             "elapsed": elapsed,
             "total_cpu": total_cpu,
             "alloc_cpus": alloc_cpus,
@@ -42,6 +47,7 @@ def parse_sacct(job_id, out_path=None, is_array=False):
     output = {
         "job_id": job_id,
         "job_name": current_job_name,
+        "submit": current_submit,
         "is_array": is_array,
         "tasks": tasks}
 
@@ -64,7 +70,7 @@ def parse_sacct(job_id, out_path=None, is_array=False):
             "avg_rss_utilization": f"{avg_rss_util:.1f}%",
             "max_elapsed": max_elapsed["elapsed"],
             "all_completed": len(failed_tasks) == 0,
-            "failed": [t["task_id"] for t in failed_tasks]
+            "failed": [t["array_task_id"] or t["task_id"] for t in failed_tasks]
         }
  
     if out_path is None:
