@@ -55,12 +55,17 @@ FAKET_SCRIPT2=$PARENT_DIR/slurm_scripts/faket/sbatch_faket_stage2_array.sh
 FAKET_SCRIPT3=$PARENT_DIR/slurm_scripts/faket/sbatch_faket_stage3.sh
 
 # add style tomograms if not already in TARGET_DIR
-#TARGET_DIR=$FAKET_BASE_DIR/style_tomograms_0
-#SOURCE_DIR=/projects/extern/nhr/nhr_ni/nim00020/dir.project/shared/ExperimentRuns_mrc
+TARGET_DIR=$FAKET_BASE_DIR/style_tomograms_0
+SOURCE_DIR=/projects/extern/nhr/nhr_ni/nim00020/dir.project/shared/ExperimentRuns_mrc
 
-#if [ ! -e "$TARGET_DIR" ]; then
-#    ln -s "$SOURCE_DIR" "$TARGET_DIR"
-#fi
+if [ ! -e "$TARGET_DIR" ]; then
+    ln -s "$SOURCE_DIR" "$TARGET_DIR"
+fi
+
+if ! ls "$TARGET_DIR"/*.mrc &>/dev/null; then
+    echo "ERROR: $TARGET_DIR contains no .mrc files."
+    exit 1
+fi
 
 submit_job() {
     local job_name=$1
