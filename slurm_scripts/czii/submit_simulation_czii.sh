@@ -6,14 +6,15 @@
 #
 # Usage:
 #   1) Before running, set the following variables at the top of the script:
-#       - PARENT_DIR:     Root directory of the project.
-#       - CONFIG_DIR:     Directory containing config files.
-#       - JSON_DIR:       Directory to collect SLURM metrics.
-#       - N_TOMOS:        Number of tomograms to generate.
-#       - POLNET_SCRIPT:  Path to sbatch_polnet_default_array.sh.
-#       - FAKET_SCRIPT1:  Path to sbatch_faket_stage1.sh.
-#       - FAKET_SCRIPT2:  Path to sbatch_faket_stage2_array.sh.
-#       - FAKET_SCRIPT3:  Path to sbatch_faket_stage3.sh.
+#       - PARENT_DIR:      Root directory of the project.
+#       - FAKET_BASE_DIR:  Output directory; corresponds to config `base_dir`.
+#       - CONFIG_DIR:      Directory containing config files.
+#       - JSON_DIR:        Directory to collect SLURM metrics.
+#       - N_TOMOS:         Number of tomograms to generate.
+#       - POLNET_SCRIPT:   Path to sbatch_polnet_default_array.sh.
+#       - FAKET_SCRIPT1:   Path to sbatch_faket_stage1.sh.
+#       - FAKET_SCRIPT2:   Path to sbatch_faket_stage2_array.sh.
+#       - FAKET_SCRIPT3:   Path to sbatch_faket_stage3.sh.
 #
 # Pipeline:
 #   PolNet (array job, CPU):
@@ -39,7 +40,7 @@
 PARENT_DIR=/projects/extern/nhr/nhr_ni/nim00020/dir.project/sage
 FAKET_BASE_DIR=$PARENT_DIR/data/simulation/czii_dataset_2
 CONFIG_DIR=$FAKET_BASE_DIR/configs
-N_TOMOS=25
+N_TOMOS=3
 
 # setup directory structure
 JSON_DIR=$FAKET_BASE_DIR/slurm_metrics
@@ -86,7 +87,7 @@ submit_job() {
         $script $config | awk '{print $4}')
     if [[ -z "$job_id" ]]; then
         echo "ERROR: Failed to submit $job_name. Aborting." >&2
-        exit 1
+        return 1
     fi
     echo "Submitted $job_name as job $job_id." >&2
 

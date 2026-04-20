@@ -13,7 +13,7 @@
 #   - Partition:      large96s
 #   - Time limit:     30 minutes
 #   - CPUs per task:  4
-#   - Memory:         8G
+#   - Memory:         10G
 ############################################################################################
 
 #SBATCH -p large96s
@@ -21,7 +21,7 @@
 #SBATCH -t 1:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=8G
+#SBATCH --mem=10G
 
 CONFIG=$1
 

@@ -6,14 +6,15 @@
 #
 # Usage:
 #   1) Before running, set the following variables at the top of the script:
-#       - PARENT_DIR:     Root directory of the project.
-#       - CONFIG_DIR:     Directory containing config files.
-#       - JSON_DIR:       Directory to collect SLURM metrics.
-#       - N_TOMOS:        Number of tomograms to generate.
-#       - POLNET_SCRIPT:  Path to sbatch_polnet_default_array.sh.
-#       - FAKET_SCRIPT1:  Path to sbatch_faket_stage1.sh.
-#       - FAKET_SCRIPT2:  Path to sbatch_faket_stage2_array.sh.
-#       - FAKET_SCRIPT3:  Path to sbatch_faket_stage3.sh.
+#       - PARENT_DIR:      Root directory of the project.
+#       - FAKET_BASE_DIR:  Output directory; corresponds to config `base_dir`.
+#       - CONFIG_DIR:      Directory containing config files.
+#       - JSON_DIR:        Directory to collect SLURM metrics.
+#       - N_TOMOS:         Number of tomograms to generate.
+#       - POLNET_SCRIPT:   Path to sbatch_polnet_default_array.sh.
+#       - FAKET_SCRIPT1:   Path to sbatch_faket_stage1.sh.
+#       - FAKET_SCRIPT2:   Path to sbatch_faket_stage2_array.sh.
+#       - FAKET_SCRIPT3:   Path to sbatch_faket_stage3.sh.
 #
 # Pipeline:
 #   PolNet (array job, CPU):
@@ -35,13 +36,17 @@
 #   - After each stage, a metrics job is submitted to collect walltime, CPU, and memory.
 ############################################################################################
 
+# configure variables
 PARENT_DIR=/projects/extern/nhr/nhr_ni/nim00020/dir.project/sage
-CONFIG_DIR=$PARENT_DIR/data/simulation/default_dataset_0/configs
-JSON_DIR=$PARENT_DIR/data/simulation/default_dataset_0/slurm_metrics
-LOG_DIR=$PARENT_DIR/data/simulation/default_dataset_0/slurm_logs
+FAKET_BASE_DIR=$PARENT_DIR/data/simulation/deepict_dataset_4
+CONFIG_DIR=$FAKET_BASE_DIR/configs
+N_TOMOS=3
+
+# setup directory structure
+JSON_DIR=$FAKET_BASE_DIR/slurm_metrics
+LOG_DIR=$FAKET_BASE_DIR/slurm_logs
 mkdir -p $JSON_DIR $LOG_DIR
 
-N_TOMOS=3
 ARRAY_RANGE="0-$((N_TOMOS - 1))"
 
 POLNET_SCRIPT=$PARENT_DIR/slurm_scripts/default/sbatch_polnet_default_array.sh
