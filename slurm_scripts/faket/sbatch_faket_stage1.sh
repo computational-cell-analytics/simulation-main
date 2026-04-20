@@ -5,7 +5,8 @@
 #   Projects style micrographs from style tomograms and runs label transformation.
 #
 # Usage:
-#   - sbatch sbatch_faket_stage1.sh <config>
+#   - Do not run directly. Called by submit_simulation_synapse.sh or submit_simulation_default.sh,
+#     which passes --array based on N_TOMOS. One array task processes one tomogram.
 #
 # Resources requested:
 #   - Partition:      large96s
@@ -23,6 +24,7 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=20G
+#SBATCH --qos=2h
 
 CONFIG=$1
 

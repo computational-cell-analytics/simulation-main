@@ -1,0 +1,38 @@
+[tool.polnet]
+out_dir = "/projects/extern/nhr/nhr_ni/nim00020/dir.project/sage/data/simulation/czii_dataset_2/simulation_dir_1"
+seed = 200
+voi_vsize = 10 
+voi_shape = [630, 630, 184]
+z_pad = 32
+
+# feature lists
+proteins_list = [
+    "in_10A/6drv_10A.pns",
+    "in_10A/6n4v_10A.pns",
+    "in_10A/6qzp_10A.pns",
+    "in_10A/7n4y_10A.pns",
+    "in_10A/8cpv_10A.pns",
+    "in_10A/8vaf_10A.pns",
+    "in_10A/1fa2_10A.pns",
+]
+
+pmer_occ_list = [0.3, 0.15, 0.15, 0.3, 0.225, 0.075, 0.3]
+pmer_occ_list_flag = true
+disable_membranes = false
+disable_mb_proteins = true
+disable_helix = false
+actin_pmer_occ = 0.7
+mt_pmer_occ = 0.3
+
+[tool.faket]
+base_dir = "/projects/extern/nhr/nhr_ni/nim00020/dir.project/sage/data/simulation/czii_dataset_2"
+simulation_index = 1
+micrograph_index = 1
+train_dir_index = 1
+czii_dir_structure = true
+detector_snr = [0.10, 0.15]
+tilt_start = -60
+tilt_stop = 60
+tilt_step = 2
+faket_min_scale = 128
+faket_end_scale = 630

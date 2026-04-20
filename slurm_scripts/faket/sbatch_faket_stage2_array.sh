@@ -21,12 +21,11 @@
 
 #SBATCH -p grete:shared
 #SBATCH --job-name=faket_stage2
-#SBATCH -t 2:00:00
+#SBATCH -t 4:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=20G
 #SBATCH -G A100:1
-#SBATCH --qos=2h
 
 CONFIG=$1
 

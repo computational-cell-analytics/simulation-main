@@ -6,7 +6,8 @@
 #   training directory, and removes intermediate directories.
 #
 # Usage:
-#   - sbatch sbatch_faket_stage3.sh <config>
+#   - Do not run directly. Called by submit_simulation_synapse.sh or submit_simulation_default.sh,
+#     which passes --array based on N_TOMOS. One array task processes one tomogram.
 #
 # Resources requested:
 #   - Partition:      large96s
@@ -17,7 +18,7 @@
 
 #SBATCH -p large96s
 #SBATCH --job-name=faket_stage3
-#SBATCH -t 0:30:00
+#SBATCH -t 1:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=8G
